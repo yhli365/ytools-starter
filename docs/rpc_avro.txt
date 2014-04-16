@@ -1,0 +1,13 @@
+
+--)python
+#install
+https://pypi.python.org/pypi
+[root@vm1 test]# tar -xzf avro-1.7.6.tar.gz 
+[root@vm1 test]# cd avro-1.7.6
+[root@vm1 avro-1.7.6]# python setup.py install
+
+#run the server
+./avro_start_server.py
+
+#run the client
+./avro_send_message.py avro_user pat Hello_World

@@ -1,4 +1,4 @@
-package starter.avro;
+package starter.serdes.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,7 +28,7 @@ import starter.Constant;
  * @author Yanhong Lee
  * @link http://avro.apache.org/docs/current/gettingstartedjava.html
  */
-public class AvroDeSerWithoutCodeGenerationTest {
+public class AvroWithoutCodeGenerationSerDesTest {
 
 	private File file = new File(Constant.TEMP_DIR + "users.avro");
 
@@ -71,7 +71,7 @@ public class AvroDeSerWithoutCodeGenerationTest {
 	}
 
 	@Test
-	public void deserByteArray() throws IOException {
+	public void serdesByteArray() throws IOException {
 		Schema schema = new Parser().parse(new File("src/main/avro/user.avsc"));
 		// Serializing to a byte array
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

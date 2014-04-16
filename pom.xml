@@ -31,6 +31,11 @@
 			<artifactId>avro</artifactId>
 			<version>${avro.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-ipc</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
 		<!-- logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -182,6 +187,9 @@
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>schema</goal>
+							<!-- rpc -->
+							<goal>protocol</goal>
+							<goal>idl-protocol</goal>
 						</goals>
 						<configuration>
 							<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>

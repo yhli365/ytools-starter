@@ -1,4 +1,4 @@
-package starter.avro;
+package starter.serdes.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,7 +25,7 @@ import example.avro.User;
  * @author Yanhong Lee
  * @link http://avro.apache.org/docs/current/gettingstartedjava.html
  */
-public class AvroDeSerWithCodeGenerationTest {
+public class AvroWithCodeGenerationSerDesTest {
 
 	private File file = new File(Constant.TEMP_DIR + "users.avro");
 
@@ -64,7 +64,7 @@ public class AvroDeSerWithCodeGenerationTest {
 	}
 
 	@Test
-	public void deserByteArray() throws IOException {
+	public void serdesByteArray() throws IOException {
 		// Serializing to a byte array
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(out, null);
