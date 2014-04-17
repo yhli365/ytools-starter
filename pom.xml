@@ -13,10 +13,15 @@
 	</organization>
 
 	<properties>
+		<!-- serdes -->
+		<protobuf.version>2.5.0</protobuf.version>
 		<avro.version>1.7.6</avro.version>
-		<protobuf.version>2.4.1</protobuf.version>
+		<thrift.version>0.9.1</thrift.version>
+		<kryo.version>2.22</kryo.version>
+		<!-- logger -->
 		<slf4j.version>1.7.1</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
+		<!-- test -->
 		<junit.version>4.10</junit.version>
 		<!-- plugin -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +30,12 @@
 	</properties>
 
 	<dependencies>
-		<!-- data serialization system -->
+		<!-- serdes -->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${protobuf.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro</artifactId>
@@ -35,6 +45,16 @@
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro-ipc</artifactId>
 			<version>${avro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.esotericsoftware.kryo</groupId>
+			<artifactId>kryo</artifactId>
+			<version>${kryo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>${thrift.version}</version>
 		</dependency>
 		<!-- logger -->
 		<dependency>
@@ -177,7 +197,7 @@
 					<outputDirectory>lib</outputDirectory>
 				</configuration>
 			</plugin>
-			<!-- Apache avro -->
+			<!-- compile: Avro -->
 			<plugin>
 				<groupId>org.apache.avro</groupId>
 				<artifactId>avro-maven-plugin</artifactId>
@@ -193,8 +213,75 @@
 						</goals>
 						<configuration>
 							<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
-							<outputDirectory>${project.basedir}/target/gen-java-avro</outputDirectory>
+							<outputDirectory>${project.basedir}/target/gen-java</outputDirectory>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- compile: Thrift | Protobuf -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>compile-thrift</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target>
+								<echo message="compile-thrift ..." />
+								<echo message="required thrift version: ${thrift.version}" />
+								<exec executable="thrift-${thrift.version}.exe">
+									<arg value="-version" />
+								</exec>
+								<mkdir dir="target/gen-java" />
+								<exec executable="thrift-${thrift.version}.exe">
+									<arg line="--gen java -r" />
+									<arg line="-I src/main/thrift" />
+									<arg line="-out target/gen-java" />
+									<arg line="src/main/thrift/tutorial.thrift" />
+								</exec>
+								<exec executable="thrift-${thrift.version}.exe">
+									<arg line="--gen java -r" />
+									<arg line="-I src/main/thrift" />
+									<arg line="-out target/gen-java" />
+									<arg line="src/main/thrift/person.thrift" />
+								</exec>
+							</target>
+							<sourceRoot>target/gen-java</sourceRoot>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>compile-protoc</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target>
+								<echo message="compile-protoc..." />
+								<path id="proto.path">
+									<fileset dir="src/main/protobuf">
+										<include name="**/*.proto" />
+									</fileset>
+								</path>
+								<pathconvert pathsep=" " property="proto.files"
+									refid="proto.path" />
+								<echo message="required protobuf version: ${protobuf.version}" />
+								<exec executable="protoc-${protobuf.version}.exe">
+									<arg value="--version" />
+								</exec>
+								<exec executable="protoc-${protobuf.version}.exe">
+									<arg line="--java_out=target/gen-java" />
+									<arg line="-I${project.basedir}/src/main/protobuf" />
+									<arg line="${proto.files}" />
+								</exec>
+							</target>
+							<sourceRoot>target/gen-java</sourceRoot>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
