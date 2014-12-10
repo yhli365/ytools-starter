@@ -14,13 +14,13 @@ import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransport;
 import org.junit.Test;
 
-import starter.Constant;
+import starter.TestUtil;
 import example.thrift.Address;
 import example.thrift.Person;
 
 public class ThriftSerDesTest {
 
-	private File file = new File(Constant.TEMP_DIR + "person.tft");
+	private File file = new File(TestUtil.TEMP_DIR + "person.tft");
 
 	@Test
 	public void serialize() throws TException, IOException {

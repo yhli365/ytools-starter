@@ -18,7 +18,7 @@ import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.junit.Test;
 
-import starter.Constant;
+import starter.TestUtil;
 import example.avro.User;
 
 /**
@@ -27,7 +27,7 @@ import example.avro.User;
  */
 public class AvroWithCodeGenerationSerDesTest {
 
-	private File file = new File(Constant.TEMP_DIR + "users.avro");
+	private File dataFile = new File(TestUtil.TEMP_DIR, "users.avro");
 
 	@Test
 	public void serialize() throws IOException {
@@ -39,7 +39,7 @@ public class AvroWithCodeGenerationSerDesTest {
 				userDatumWriter);
 
 		List<User> users = this.createUsers();
-		dataFileWriter.create(users.get(0).getSchema(), file);
+		dataFileWriter.create(users.get(0).getSchema(), dataFile);
 		for (User user : users) {
 			dataFileWriter.append(user);
 		}
@@ -51,8 +51,8 @@ public class AvroWithCodeGenerationSerDesTest {
 		// Deserialize Users from disk
 		DatumReader<User> userDatumReader = new SpecificDatumReader<User>(
 				User.class);
-		DataFileReader<User> dataFileReader = new DataFileReader<User>(file,
-				userDatumReader);
+		DataFileReader<User> dataFileReader = new DataFileReader<User>(
+				dataFile, userDatumReader);
 		User user = null;
 		while (dataFileReader.hasNext()) {
 			// Reuse user object by passing it to next(). This saves us from

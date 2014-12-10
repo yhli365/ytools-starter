@@ -22,7 +22,7 @@ import httplib
 import avro.ipc as ipc
 import avro.protocol as protocol
 
-PROTOCOL = protocol.parse(open("../avro/mail.avpr").read())
+PROTOCOL = protocol.parse(open("../../serdes/avro/mail.avpr").read())
 
 server_addr = ('127.0.0.1', 9090)
 

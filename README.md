@@ -1,16 +1,16 @@
 ytools-starter
 ==============
 
---#data serialization system
---)Apache Avro
+--[SerDes] data serialization system
+#)Apache Avro
 http://avro.apache.org/
 
---)Google Protocol Buffers
+#)Google Protocol Buffers
 https://code.google.com/p/protobuf/
 
---)Apache Thrift
+#)Apache Thrift
 http://thrift.apache.org/
 
---)Kryo
+#)Kryo
 https://github.com/EsotericSoftware/kryo
 

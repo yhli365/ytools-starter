@@ -15,7 +15,7 @@
 	<properties>
 		<!-- serdes -->
 		<protobuf.version>2.5.0</protobuf.version>
-		<avro.version>1.7.6</avro.version>
+		<avro.version>1.7.7</avro.version>
 		<thrift.version>0.9.1</thrift.version>
 		<kryo.version>2.22</kryo.version>
 		<!-- logger -->
@@ -201,7 +201,7 @@
 			<plugin>
 				<groupId>org.apache.avro</groupId>
 				<artifactId>avro-maven-plugin</artifactId>
-				<version>1.7.6</version>
+				<version>${avro.version}</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -212,7 +212,7 @@
 							<goal>idl-protocol</goal>
 						</goals>
 						<configuration>
-							<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+							<sourceDirectory>${project.basedir}/src/main/serdes/avro</sourceDirectory>
 							<outputDirectory>${project.basedir}/target/gen-java</outputDirectory>
 						</configuration>
 					</execution>
@@ -237,15 +237,15 @@
 								<mkdir dir="target/gen-java" />
 								<exec executable="thrift-${thrift.version}.exe">
 									<arg line="--gen java -r" />
-									<arg line="-I src/main/thrift" />
+									<arg line="-I src/main/serdes/thrift" />
 									<arg line="-out target/gen-java" />
-									<arg line="src/main/thrift/tutorial.thrift" />
+									<arg line="src/main/serdes/thrift/tutorial.thrift" />
 								</exec>
 								<exec executable="thrift-${thrift.version}.exe">
 									<arg line="--gen java -r" />
-									<arg line="-I src/main/thrift" />
+									<arg line="-I src/main/serdes/thrift" />
 									<arg line="-out target/gen-java" />
-									<arg line="src/main/thrift/person.thrift" />
+									<arg line="src/main/serdes/thrift/person.thrift" />
 								</exec>
 							</target>
 							<sourceRoot>target/gen-java</sourceRoot>
@@ -261,7 +261,7 @@
 							<target>
 								<echo message="compile-protoc..." />
 								<path id="proto.path">
-									<fileset dir="src/main/protobuf">
+									<fileset dir="src/main/serdes/protobuf">
 										<include name="**/*.proto" />
 									</fileset>
 								</path>
@@ -273,7 +273,7 @@
 								</exec>
 								<exec executable="protoc-${protobuf.version}.exe">
 									<arg line="--java_out=target/gen-java" />
-									<arg line="-I${project.basedir}/src/main/protobuf" />
+									<arg line="-I${project.basedir}/src/main/serdes/protobuf" />
 									<arg line="${proto.files}" />
 								</exec>
 							</target>

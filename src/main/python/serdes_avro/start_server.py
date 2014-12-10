@@ -21,7 +21,7 @@ import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
 
-PROTOCOL = protocol.parse(open("../avro/mail.avpr").read())
+PROTOCOL = protocol.parse(open("../../serdes/avro/mail.avpr").read())
 
 class MailResponder(ipc.Responder):
     def __init__(self):

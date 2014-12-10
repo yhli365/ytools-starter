@@ -1,8 +1,33 @@
 package starter;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
 public class TestUtil {
+
+	public static final String TEMP_DIR = "D:/ydata/tmp/";
+
+	private static byte[] RANDOM_BYTES;
+	private static Random rand = new Random();
+
+	static {
+		RANDOM_BYTES = new byte[('z' - 'a' + 1) * 2];
+		int k = 0;
+		for (int i = 'a'; i <= 'z'; i++) {
+			RANDOM_BYTES[k++] = (byte) i;
+		}
+		for (int i = 'A'; i <= 'Z'; i++) {
+			RANDOM_BYTES[k++] = (byte) i;
+		}
+	}
+
+	public static byte[] randBytes(int len) {
+		byte[] bytes = new byte[len];
+		for (int i = 0; i < len; i++) {
+			bytes[i] = RANDOM_BYTES[rand.nextInt(RANDOM_BYTES.length)];
+		}
+		return bytes;
+	}
 
 	public static void execMain(Class<?> mainClass, String... commandLine)
 			throws Exception {

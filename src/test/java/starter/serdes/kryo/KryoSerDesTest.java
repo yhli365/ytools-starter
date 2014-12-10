@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import starter.Constant;
+import starter.TestUtil;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -28,7 +28,7 @@ import com.esotericsoftware.kryo.io.OutputChunked;
  */
 public class KryoSerDesTest {
 
-	private File file = new File(Constant.TEMP_DIR + "simple.kyro");
+	private File file = new File(TestUtil.TEMP_DIR + "simple.kyro");
 
 	public static class Simple implements Serializable {
 		private static final long serialVersionUID = 9071179835819737926L;

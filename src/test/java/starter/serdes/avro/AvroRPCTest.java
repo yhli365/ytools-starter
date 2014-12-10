@@ -22,8 +22,20 @@ import example.avro.proto.Message;
  */
 public class AvroRPCTest {
 
-	private String host = "192.168.56.101";
-	private int port = 9090;//65111;
+	private int port = 9090;
+
+	@Test
+	public void testRunServer() throws InterruptedException {
+		startServer("127.0.0.1");
+	}
+
+	@Test
+	public void testRunClient() throws IOException {
+		String host = "127.0.0.1";
+
+		startClient(host, "avro_user", "pat", "Hello_World");
+		startClient(host, "to@qq.com", "from@qq.com", "body test" + new Date());
+	}
 
 	public static class MailImpl implements Mail {
 		// in this simple example just return details of the message
@@ -38,8 +50,7 @@ public class AvroRPCTest {
 		}
 	}
 
-	@Test
-	public void startServer() throws InterruptedException {
+	public void startServer(String host) throws InterruptedException {
 		System.out.println("Starting server");
 		Server server = new NettyServer(new SpecificResponder(Mail.class,
 				new MailImpl()), new InetSocketAddress(port));
@@ -49,23 +60,23 @@ public class AvroRPCTest {
 		Thread.sleep(60000L);
 		// cleanup
 		server.close();
-		System.out.println("Stop server");
+		System.out.println("Server stopped");
 	}
 
-	@Test
-	public void startClient() throws IOException {
+	public void startClient(String host, String to, String from, String body)
+			throws IOException {
 		System.out.println("Starting client");
-		NettyTransceiver client = new NettyTransceiver(new InetSocketAddress(host,
-				port));
+		NettyTransceiver client = new NettyTransceiver(new InetSocketAddress(
+				host, port));
 		// client code - attach to the server and send a message
 		Mail proxy = (Mail) SpecificRequestor.getClient(Mail.class, client);
 		System.out.println("Client built, got proxy");
 
 		// fill in the Message record and send it
 		Message message = new Message();
-		message.setTo(new Utf8("to@qq.com"));
-		message.setFrom(new Utf8("from@qq.com"));
-		message.setBody(new Utf8("body-" + new Date()));
+		message.setTo(new Utf8(to));
+		message.setFrom(new Utf8(from));
+		message.setBody(new Utf8(body));
 		System.out.println("Calling proxy.send with message:  "
 				+ message.toString());
 		System.out.println("Result: " + proxy.send(message));

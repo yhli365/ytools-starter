@@ -10,7 +10,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import starter.Constant;
+import starter.TestUtil;
 import example.protobuf.tutorial.AddressBookProtos.AddressBook;
 import example.protobuf.tutorial.AddressBookProtos.Person;
 import example.protobuf.tutorial.AddressBookProtos2.AddressBook2;
@@ -18,7 +18,7 @@ import example.protobuf.tutorial.AddressBookProtos2.Person2;
 
 public class AddressBookSerDesTest {
 
-	private File file = new File(Constant.TEMP_DIR + "persons.pbf");
+	private File file = new File(TestUtil.TEMP_DIR + "persons.pbf");
 
 	@Test
 	public void addPerson() throws IOException {

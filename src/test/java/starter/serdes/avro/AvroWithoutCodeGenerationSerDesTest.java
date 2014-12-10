@@ -22,7 +22,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
 import org.junit.Test;
 
-import starter.Constant;
+import starter.TestUtil;
 
 /**
  * @author Yanhong Lee
@@ -30,20 +30,21 @@ import starter.Constant;
  */
 public class AvroWithoutCodeGenerationSerDesTest {
 
-	private File file = new File(Constant.TEMP_DIR + "users.avro");
+	private File dataFile = new File(TestUtil.TEMP_DIR, "users.avro");
+	private File schemaFile = new File("src/main/serdes/avro", "user.avsc");
 
 	@Test
 	public void serialize() throws IOException {
 		// First, we use a Parser to read our schema definition and create a
 		// Schema object.
-		Schema schema = new Parser().parse(new File("src/main/avro/user.avsc"));
+		Schema schema = new Parser().parse(schemaFile);
 
 		// Serialize user1 and user2 to disk
 		DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<GenericRecord>(
 				schema);
 		DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(
 				datumWriter);
-		dataFileWriter.create(schema, file);
+		dataFileWriter.create(schema, dataFile);
 
 		List<GenericRecord> users = this.createUsers(schema);
 		for (GenericRecord user : users) {
@@ -55,24 +56,25 @@ public class AvroWithoutCodeGenerationSerDesTest {
 
 	@Test
 	public void deserialize() throws IOException {
-		deserialize("src/main/avro/user.avsc");
-	}
-
-	@Test
-	public void deserialize2() throws IOException {
-		// 少1个字段
-		deserialize("src/main/avro/user2.avsc");
-	}
-
-	@Test
-	public void deserialize3() throws IOException {
-		// 多1个字段，必须有默认值，否则报错
-		deserialize("src/main/avro/user3.avsc");
+		Schema schema = new Parser().parse(schemaFile);
+		// Deserialize users from disk
+		DatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(
+				schema);
+		DataFileReader<GenericRecord> dataFileReader = new DataFileReader<GenericRecord>(
+				dataFile, datumReader);
+		GenericRecord user = null;
+		while (dataFileReader.hasNext()) {
+			// Reuse user object by passing it to next(). This saves us from
+			// allocating and garbage collecting many objects for files with
+			// many items.
+			user = dataFileReader.next(user);
+			System.out.println(user);
+		}
 	}
 
 	@Test
 	public void serdesByteArray() throws IOException {
-		Schema schema = new Parser().parse(new File("src/main/avro/user.avsc"));
+		Schema schema = new Parser().parse(schemaFile);
 		// Serializing to a byte array
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(out, null);
@@ -116,23 +118,6 @@ public class AvroWithoutCodeGenerationSerDesTest {
 		user2.put("favorite_color", "red");
 		users.add(user2);
 		return users;
-	}
-
-	private void deserialize(String schemaFile) throws IOException {
-		Schema schema = new Parser().parse(new File(schemaFile));
-		// Deserialize users from disk
-		DatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(
-				schema);
-		DataFileReader<GenericRecord> dataFileReader = new DataFileReader<GenericRecord>(
-				file, datumReader);
-		GenericRecord user = null;
-		while (dataFileReader.hasNext()) {
-			// Reuse user object by passing it to next(). This saves us from
-			// allocating and garbage collecting many objects for files with
-			// many items.
-			user = dataFileReader.next(user);
-			System.out.println(user);
-		}
 	}
 
 }
