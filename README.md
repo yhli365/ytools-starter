@@ -1,7 +1,7 @@
 ytools-starter
 ==============
 
---[SerDes] data serialization system
+--)SerDes: data serialization system
 #)Apache Avro
 http://avro.apache.org/
 
