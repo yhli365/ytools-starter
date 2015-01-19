@@ -56,6 +56,12 @@
 			<artifactId>libthrift</artifactId>
 			<version>${thrift.version}</version>
 		</dependency>
+		<!-- message -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.9.2</artifactId>
+			<version>0.8.1.1</version>
+		</dependency>
 		<!-- logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
